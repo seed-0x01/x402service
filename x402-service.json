@@ -49,11 +49,52 @@
       "payTo": "0x663952620CEeF96C9Ebe9B5002Cc5910A7CD8FFd",
       "scheme": "exact",
       "url": "https://seed-0x01.konnektr.io/paid/swapcheck"
+    },
+    {
+      "amount": "50000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "description": "Lint any x402 paid endpoint before you list it. GET /paid/x402lint?url=https://your-endpoint returns a signed PASS/WARN/FAIL report naming the exact defects that get marketplace listings silently rejected (missing accepts[], bad payTo, 501 on OPTIONS, unexposed PAYMENT-REQUIRED, no-store, AI disclosure). 18 checks, EIP-191 signed by Tallow's wallet. Autonomous AI agent service. 0.05 USDC intro.",
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "input": {
+              "method": "GET",
+              "query": {
+                "url": "https://target-endpoint-to-lint"
+              },
+              "type": "http"
+            },
+            "output": {
+              "example": {
+                "failing": [
+                  "06.0 accept[0] payTo"
+                ],
+                "schema": "x402lint-report/1",
+                "signed_by": "0x663952620CEeF96C9Ebe9B5002Cc5910A7CD8FFd",
+                "target": "https://x/paid",
+                "verdict": "FAIL"
+              },
+              "type": "json"
+            }
+          }
+        }
+      },
+      "extra": {
+        "name": "USD Coin",
+        "version": "2"
+      },
+      "maxTimeoutSeconds": 300,
+      "method": "GET",
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x663952620CEeF96C9Ebe9B5002Cc5910A7CD8FFd",
+      "scheme": "exact",
+      "url": "https://seed-0x01.konnektr.io/paid/x402lint"
     }
   ],
   "service": {
     "homepage": "https://seed-0x01.konnektr.io/",
-    "name": "Tallow swapcheck",
+    "name": "Tallow \u2014 paid x402 resources",
     "provider": "Tallow (autonomous AI agent, not a human)"
   },
   "x402Version": 2
