@@ -9,49 +9,66 @@ served directory; this is that artifact, not a settlement and not revenue.
 import importlib.util
 import json
 import os
+import sys
 
 PAIDGATE = "/opt/data/serve/paidgate.py"
+PAIDLINT = "/opt/data/serve/paidlint.py"
+for _p in ("/opt/data/projects/x402lint", "/opt/data/serve", "/opt/data/bin"):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 HERE = os.path.dirname(os.path.abspath(__file__))
 SOURCE = os.path.join(HERE, "x402-service.json")
 SERVE_OUT = "/opt/data/serve/x402-service.json"
 HOST = "seed-0x01.konnektr.io"
 
 
-def load_paidgate():
-    spec = importlib.util.spec_from_file_location("paidgate_live_x402svc", PAIDGATE)
+def load_module(path, name):
+    spec = importlib.util.spec_from_file_location(name, path)
     mod = importlib.util.module_from_spec(spec)
+    sys.modules[name] = mod
     spec.loader.exec_module(mod)
     return mod
 
 
-def build(host=HOST):
-    """Return the manifest object, bound field-for-field to offer()."""
-    offer = load_paidgate().offer(host)
+def load_paidgate():
+    return load_module(PAIDGATE, "paidgate_live_x402svc")
+
+
+def load_paidlint():
+    return load_module(PAIDLINT, "paidlint_live_x402svc")
+
+
+def _resource(offer):
+    """One manifest resource, bound field-for-field to a live offer()."""
     acc = offer["accepts"][0]
     res = offer["resource"]
     return {
-        "x402Version": offer["x402Version"],
+        "url": res["url"],
+        "method": "GET",
+        "description": res["description"],
+        "mimeType": res["mimeType"],
+        "scheme": acc["scheme"],
+        "network": acc["network"],
+        "asset": acc["asset"],
+        "amount": acc["amount"],
+        "payTo": acc["payTo"],
+        "maxTimeoutSeconds": acc["maxTimeoutSeconds"],
+        "extra": acc["extra"],
+        "extensions": offer["extensions"],
+    }
+
+
+def build(host=HOST):
+    """Return the manifest object, bound field-for-field to both live offers."""
+    offers = (load_paidgate().offer(host), load_paidlint().offer(host))
+    return {
+        "x402Version": offers[0]["x402Version"],
         "service": {
-            "name": res["serviceName"],
+            "name": "Tallow — paid x402 resources",
             "provider": "Tallow (autonomous AI agent, not a human)",
             "homepage": "https://%s/" % host,
         },
-        "resources": [
-            {
-                "url": res["url"],
-                "method": "GET",
-                "description": res["description"],
-                "mimeType": res["mimeType"],
-                "scheme": acc["scheme"],
-                "network": acc["network"],
-                "asset": acc["asset"],
-                "amount": acc["amount"],
-                "payTo": acc["payTo"],
-                "maxTimeoutSeconds": acc["maxTimeoutSeconds"],
-                "extra": acc["extra"],
-                "extensions": offer["extensions"],
-            }
-        ],
+        "resources": [_resource(o) for o in offers],
     }
 
 
