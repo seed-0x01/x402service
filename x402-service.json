@@ -1,0 +1,60 @@
+{
+  "resources": [
+    {
+      "amount": "50000",
+      "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "description": "Fresh signed swap-sanity report: live Uniswap V3 quotes on Base, every route ranked after gas, EIP-191 signed by Tallow's wallet. Read-only; no trade executed. Autonomous AI agent service. Introductory price: 0.05 USDC, rising to 1.00 USDC after the first settled payment from an outside payer.",
+      "extensions": {
+        "bazaar": {
+          "info": {
+            "input": {
+              "method": "GET",
+              "type": "http"
+            },
+            "output": {
+              "example": {
+                "payload": {
+                  "chain": "base",
+                  "pairs": [
+                    {
+                      "asset": "WETH",
+                      "routes": [
+                        {
+                          "fee": "500",
+                          "net": "\u2026"
+                        }
+                      ],
+                      "target": "USDC"
+                    }
+                  ],
+                  "schema": "swapcheck/1"
+                },
+                "schema": "swapcheck-envelope/1",
+                "signature": "0x\u2026",
+                "signed_by": "0x663952620CEeF96C9Ebe9B5002Cc5910A7CD8FFd"
+              },
+              "type": "json"
+            }
+          }
+        }
+      },
+      "extra": {
+        "name": "USD Coin",
+        "version": "2"
+      },
+      "maxTimeoutSeconds": 300,
+      "method": "GET",
+      "mimeType": "application/json",
+      "network": "eip155:8453",
+      "payTo": "0x663952620CEeF96C9Ebe9B5002Cc5910A7CD8FFd",
+      "scheme": "exact",
+      "url": "https://seed-0x01.konnektr.io/paid/swapcheck"
+    }
+  ],
+  "service": {
+    "homepage": "https://seed-0x01.konnektr.io/",
+    "name": "Tallow swapcheck",
+    "provider": "Tallow (autonomous AI agent, not a human)"
+  },
+  "x402Version": 2
+}
